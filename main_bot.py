@@ -4,9 +4,11 @@ from binance.client import Client
 import datetime
 import time
 
+
 class MyStreamListener(tweepy.StreamListener):
 
-    client = Client("binance_key", "binance_secret")
+    client = Client("Rbf6XBLon1tZyettwIGAl4HndRox4vBrJkOVIb3s4pj9Z5bYBeDmNfLGmylWFdnz",
+                    "3Pwpw8v9qEFXecOtVjwL9B72LMUbxWVsoM7fJfOLE4778NMiYLjvYHozSsJjUysZ")
 
     btc_within_1_hour = False
     btc_within_1_hour_ts = ""
@@ -28,6 +30,30 @@ class MyStreamListener(tweepy.StreamListener):
     doge_time_between_price_check = 5
     doge_time_between_price_check_last_ts = ""
 
+    def __init__(self):
+        self.client = Client("binance_key",
+                             "binance_secret")
+
+        self.btc_within_1_hour = False
+        self.btc_within_1_hour_ts = ""
+        self.btc_time_between_price_check = 5
+        self.btc_time_between_price_check_last_ts = ""
+
+        self.eth_within_1_hour = False
+        self.eth_within_1_hour_ts = ""
+        self.eth_time_between_price_check = 5
+        self.eth_time_between_price_check_last_ts = ""
+
+        self.ada_within_1_hour = False
+        self.ada_within_1_hour_ts = ""
+        self.ada_time_between_price_check = 5
+        self.ada_time_between_price_check_last_ts = ""
+
+        self.doge_within_1_hour = False
+        self.doge_within_1_hour_ts = ""
+        self.doge_time_between_price_check = 5
+        self.doge_time_between_price_check_last_ts = ""
+
     def on_status(self, status):
         if status.user.id_str != '44196397':
             return
@@ -35,32 +61,31 @@ class MyStreamListener(tweepy.StreamListener):
         playsound('beep.wav')
 
         if("btc" in status.text or "bitcoin" in status.text):
-            btc_within_1_hour = True
-            btc_within_1_hour_ts = time.time()
-            btc_time_between_price_check_last_ts = time.time()
-            print(client.get_avg_price(symbol='BTCUSDT'))
-        
+            self.btc_within_1_hour = True
+            self.btc_within_1_hour_ts = time.time()
+            self.btc_time_between_price_check_last_ts = time.time()
+            print(self.client.get_avg_price(symbol='BTCUSDT'))
+
         if("eth" in status.text):
-            eth_within_1_hour = True
-            eth_within_1_hour_ts = time.time()
-            eth_time_between_price_check_last_ts = time.time()
-            print(client.get_avg_price(symbol='ETHUSDT'))
-        
+            self.eth_within_1_hour = True
+            self.eth_within_1_hour_ts = time.time()
+            self.eth_time_between_price_check_last_ts = time.time()
+            print(self.client.get_avg_price(symbol='ETHUSDT'))
+
         if("ada" in status.text or "cardano" in status.text):
-            ada_within_1_hour = True
-            ada_within_1_hour_ts = time.time()
-            ada_time_between_price_check_last_ts = time.time()
-            print(client.get_avg_price(symbol='ADAUSDT'))
-        
+            self.ada_within_1_hour = True
+            self.ada_within_1_hour_ts = time.time()
+            self.ada_time_between_price_check_last_ts = time.time()
+            print(self.client.get_avg_price(symbol='ADAUSDT'))
+
         if("doge" in status.text):
-            doge_within_1_hour = True
-            doge_within_1_hour_ts = time.time()
-            doge_time_between_price_check_last_ts = time.time()
-            print(client.get_avg_price(symbol='DOGEUSDT'))
+            self.doge_within_1_hour = True
+            self.doge_within_1_hour_ts = time.time()
+            self.doge_time_between_price_check_last_ts = time.time()
+            print(self.client.get_avg_price(symbol='DOGEUSDT'))
 
-        ct = datetime.datetime.now() 
-        print("current time:-", ct) 
-
+        ct = datetime.datetime.now()
+        print("current time:-", ct)
 
     def on_error(self, status_code):
         if status_code == 420:
@@ -68,45 +93,45 @@ class MyStreamListener(tweepy.StreamListener):
 
     def on_data(self, raw_data):
 
-        if(btc_within_1_hour == True):
-            if(btc_within_1_hour_ts + 3600 > time.time()):
-                if(time.time() > btc_time_between_price_check_last_ts + (btc_time_between_price_check * 60)):
-                    print(client.get_avg_price(symbol='BTCUSDT'))
-                    btc_time_between_price_check_last_ts = time.time()
+        if(self.btc_within_1_hour == True):
+            if(self.btc_within_1_hour_ts + 3600 > time.time()):
+                if(time.time() > self.btc_time_between_price_check_last_ts + (self.btc_time_between_price_check * 60)):
+                    print(self.client.get_avg_price(symbol='BTCUSDT'))
+                    self.btc_time_between_price_check_last_ts = time.time()
                 else:
                     return
             else:
-                btc_within_1_hour = False
+                self.btc_within_1_hour = False
 
-        if(eth_within_1_hour == True):
-            if(eth_within_1_hour_ts + 3600 > time.time()):
-                if(time.time() > eth_time_between_price_check_last_ts + (eth_time_between_price_check * 60)):
-                    print(client.get_avg_price(symbol='ETHUSDT'))
-                    eth_time_between_price_check_last_ts = time.time()
+        if(self.eth_within_1_hour == True):
+            if(self.eth_within_1_hour_ts + 3600 > time.time()):
+                if(time.time() > self.eth_time_between_price_check_last_ts + (self.eth_time_between_price_check * 60)):
+                    print(self.client.get_avg_price(symbol='ETHUSDT'))
+                    self.eth_time_between_price_check_last_ts = time.time()
                 else:
                     return
             else:
-                eth_within_1_hour = False
+                self.eth_within_1_hour = False
 
-        if(ada_within_1_hour == True):
-            if(ada_within_1_hour_ts + 3600 > time.time()):
-                if(time.time() > ada_time_between_price_check_last_ts + (ada_time_between_price_check * 60)):
-                    print(client.get_avg_price(symbol='ADAUSDT'))
-                    ada_time_between_price_check_last_ts = time.time()
+        if(self.ada_within_1_hour == True):
+            if(self.ada_within_1_hour_ts + 3600 > time.time()):
+                if(time.time() > self.ada_time_between_price_check_last_ts + (self.ada_time_between_price_check * 60)):
+                    print(self.client.get_avg_price(symbol='ADAUSDT'))
+                    self.ada_time_between_price_check_last_ts = time.time()
                 else:
                     return
             else:
-                ada_within_1_hour = False
+                self.ada_within_1_hour = False
 
-        if(doge_within_1_hour == True):
-            if(doge_within_1_hour_ts + 3600 > time.time()):
-                if(time.time() > doge_time_between_price_check_last_ts + (doge_time_between_price_check * 60)):
-                    print(client.get_avg_price(symbol='DOGEUSDT'))
-                    doge_time_between_price_check_last_ts = time.time()
+        if(self.doge_within_1_hour == True):
+            if(self.doge_within_1_hour_ts + 3600 > time.time()):
+                if(time.time() > self.doge_time_between_price_check_last_ts + (self.doge_time_between_price_check * 60)):
+                    print(self.client.get_avg_price(symbol='DOGEUSDT'))
+                    self.doge_time_between_price_check_last_ts = time.time()
                 else:
                     return
             else:
-                doge_within_1_hour = False
+                self.doge_within_1_hour = False
 
 
 auth = tweepy.OAuthHandler("twitter_api_key", "twitter_api_secret")
